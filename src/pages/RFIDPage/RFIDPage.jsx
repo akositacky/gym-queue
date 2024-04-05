@@ -77,10 +77,10 @@ const RFIDPage = () => {
                 </ModalContent>
             </Modal>
 
-            <Container maxW={"container.xl"} py={10}>
+            <Container maxW={"container.xl"}>
                 <Box p={4}>
                     <Heading as='h4' size='md' pb={4}>
-                        RFID
+                        RFID Bracelet
                     </Heading>
                     <Flex gap={2}>
                         <Text>
@@ -92,7 +92,7 @@ const RFIDPage = () => {
                             Add RFID
                         </Button>
                     </Flex>
-                    <TableContainer>
+                    <TableContainer border={'1px solid'} borderColor={'cyan.100'} borderRadius='10px' mt={5} p={1}>
                         <Table size='sm' __css={{ 'table-layout': 'fixed', width: 'full' }} variant='striped' >
                             <Thead>
                                 <Tr>

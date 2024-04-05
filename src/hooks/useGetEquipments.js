@@ -34,6 +34,7 @@ const useGetEquipment = () => {
                     querySnapshot.forEach((doc) => {
                         combinedResult.push({ id: doc.id, ...doc.data(), ...realtimeResponse[doc.data().equipmentName] });
                     });
+                    console.log('combinedResult',combinedResult)
 
                     setEquipment(combinedResult);
                 // **********************  END RTDB **********************

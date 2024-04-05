@@ -1,11 +1,20 @@
 import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack } from '@chakra-ui/react'
-import useGetEquipment from '../../hooks/useGetEquipments';
 import EquipmentItem from './EquipmentItem';
 import useAuthStore from '../../store/authStore';
-import { InfoIcon, SpinnerIcon } from '@chakra-ui/icons';
+import { InfoIcon } from '@chakra-ui/icons';
+import useGetEquipment from '../../hooks/useGetEquipments';
 
 const HomeEquipment = () => {
+    // const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+    // const isPendingData = equipments && equipments.filter((e) => e.User === authUser.uid);
+    // const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
+    const authUser = useAuthStore((state) => state.user);
     const { isLoading, equipments } = useGetEquipment();
+
+    const isPendingData = equipments && equipments.filter((e) => e.User === authUser.uid && e.status === "USE");
+    const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
+
+    // const [isPendingDialog, setIsPendingDialog] = useState(isPendingData && isPendingData.length > 0 ? true : false)
     // const isLoading = false;
     // const equipments = [
     //     {
@@ -46,15 +55,17 @@ const HomeEquipment = () => {
     //         "createdAt": 1710448199322
     //     }
     // ];
-
-    const authUser = useAuthStore((state) => state.user);
+    // console.log('equipments', equipments, authUser.uid);
+    console.log('boolPendingData', boolPendingData);
     // console.log('equipments', equipments);
     // console.log('authUser', authUser);
     // console.log('userIsInEquipment', userIsInEquipment);
     if (!authUser) return <Spinner />;
     const userIsInEquipment = authUser && equipments && authUser.inEquipment != '' ? equipments.filter((e) => e.id === authUser.inEquipment) : null;
     const isOffline = authUser.RFIDcode === '' ? true : false;
-
+    // const isPending = isPendingData.length > 0 ? isPendingData : false;
+    // const isPending =;
+    // console.log(' isPendingDialog', boolPendingData, isOpen, isPendingData);
     return (
         <>
             <Container maxW={"container.xl"}>
@@ -73,7 +84,7 @@ const HomeEquipment = () => {
                 >
                     Welcome back!
                 </Heading>
-                {userIsInEquipment && userIsInEquipment.length > 0 && (
+                {boolPendingData && (
                     <Flex
                         pr={2}
                         my={5}
@@ -90,7 +101,7 @@ const HomeEquipment = () => {
                             fontWeight='bolder'
                             textShadow='0 0 3px white, 0 0 5px #0000FF'
                         >
-                            {userIsInEquipment[0].name}!
+                            {isPendingData[0].name}!
                         </Link>
                     </Flex>
                 )}
@@ -117,7 +128,7 @@ const HomeEquipment = () => {
                                     fontSize='xs'
                                     color='gray.600'
                                 >
-                                    Online (On gym)
+                                    Available
                                 </Text>
                             </>
                         ) : (
@@ -128,7 +139,7 @@ const HomeEquipment = () => {
                                     fontSize='xs'
                                     color='gray.600'
                                 >
-                                    Offline
+                                    Unavailable
                                 </Text>
                                 <Tooltip size="xs" label="Please go to your administrator" fontSize='md'>
                                     <InfoIcon w={4} color={'gray.600'} />
@@ -157,13 +168,16 @@ const HomeEquipment = () => {
                     {!isLoading && equipments.length > 0 &&
                         equipments.map((post) => <EquipmentItem key={post.id} equipments={post} isOffline={isOffline} />)
                     }
+
                 </SimpleGrid>
                 {!isLoading && equipments.length === 0 && (
                     <>
-                        <Text fontSize={"md"} color={"red.400"}>
-                            Getting equipments...
+                        <Flex>
+                            <Text fontSize={"md"} color={"red.400"}>
+                                Getting equipments...
+                            </Text>
                             <Spinner />
-                        </Text>
+                        </Flex>
                     </>
                 )}
             </Container>

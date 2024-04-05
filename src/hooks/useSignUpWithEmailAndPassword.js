@@ -39,9 +39,9 @@ const useSignUpWithEmailAndPassword = () => {
                     fullName: inputs.fullName,
                     bio: "",
                     profilePicURL: "",
-                    followers: [],
-                    following: [],
-                    posts: [],
+                    RFIDcode: "",
+                    User: "",
+                    // posts: [],
                     userRole: 'user',
                     createdAt: Date.now(),
                 };

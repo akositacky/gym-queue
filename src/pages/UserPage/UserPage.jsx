@@ -24,7 +24,7 @@ const UserPage = () => {
 
     return (
         <>
-            <Container maxW={"container.xl"} py={10}>
+            <Container maxW={"container.xl"}>
                 <Box p={4}>
                     <Heading as='h4' size='md' pb={4}>
                         User Equipments
@@ -36,8 +36,8 @@ const UserPage = () => {
                         <Input onChange={e => setUserQuery(e.target.value)} placeholder='' size='sm' />
                     </Flex>
 
-                    <TableContainer>
-                        <Table variant='striped' size='sm' __css={{ 'table-layout': 'fixed', width: 'full' }} >
+                    <TableContainer border={'1px solid'} borderColor={'cyan.100'} borderRadius='10px' mt={5} p={1}>
+                        <Table variant='striped' size='sm' sx={{ 'tableLayout': 'fixed', width: 'full' }} >
                             <Thead>
                                 <Tr>
                                     <Th>

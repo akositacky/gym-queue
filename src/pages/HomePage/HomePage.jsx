@@ -14,14 +14,12 @@ const HomePage = () => {
                     h={12}
                     position='fixed'
                     boxShadow='sm'
-                    bgColor='white'
                     zIndex={9}
+                    bgGradient='linear(to-r, cyan.500, blue.500)'
+                    color='white'
                 >
-                    <Text
-                        bgGradient='linear(to-r, cyan.500, blue.500)'
-                        bgClip='text'
-                    >
-                        Gym Equipment Management
+                    <Text>
+                        Gym Queue Management
                     </Text>
                 </Heading>
                 <Box h={10} mb={3} />
