@@ -2,6 +2,7 @@ import { Box, Container, Heading, SimpleGrid } from '@chakra-ui/react'
 import CreateEquipment from '../../components/HomeEquipment/CreateEquipment'
 import useGetEquipment from '../../hooks/useGetEquipments';
 import EquipmentItemAdmin from '../../components/HomeEquipment/EquimentItemAdmin';
+import EquipmentClear from '../../components/HomeEquipment/EquipmentClear';
 
 const EquipmentPage = () => {
     const { isLoading, equipments } = useGetEquipment();
@@ -12,6 +13,11 @@ const EquipmentPage = () => {
                 <Heading as='h4' size='md' pb={4}>
                     Manage Equipments
                 </Heading>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={2}>
+                    {!isLoading && equipments.length > 0 &&
+                        equipments.map((post) => <EquipmentClear key={post.id} equipments={post} isOffline={false} />)
+                    }
+                </SimpleGrid>
                 <CreateEquipment />
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                     {!isLoading && equipments.length > 0 &&

@@ -1,7 +1,28 @@
 import { Box, Container, Heading, Hide, Text } from "@chakra-ui/react";
 import HomeEquipment from "../../components/HomeEquipment/HomeEquipment";
+import { useEffect } from "react";
 
 const HomePage = () => {
+    useEffect(() => {
+        function vibrate() {
+            if (!window) {
+                return;
+            }
+
+            if (!window.navigator) {
+                return;
+            }
+
+            if (!window.navigator.vibrate) {
+                return;
+            }
+
+            window.navigator.vibrate([200, 100, 200]);
+        }
+
+        vibrate();
+    }, [])
+
     return (
         <>
             <Hide above='md'>
@@ -14,14 +35,12 @@ const HomePage = () => {
                     h={12}
                     position='fixed'
                     boxShadow='sm'
-                    bgColor='white'
                     zIndex={9}
+                    bgGradient='linear(to-r, cyan.500, blue.500)'
+                    color='white'
                 >
-                    <Text
-                        bgGradient='linear(to-r, cyan.500, blue.500)'
-                        bgClip='text'
-                    >
-                        Gym Equipment Management
+                    <Text>
+                        Gym Queue Management
                     </Text>
                 </Heading>
                 <Box h={10} mb={3} />
