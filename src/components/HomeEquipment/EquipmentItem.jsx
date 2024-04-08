@@ -154,9 +154,7 @@ const EquipmentItem = ({ equipments, isOffline }) => {
                 bgGradient={isUse && 'linear(to-r, cyan.300, blue.400)'}
                 direction='column'
             >
-                <Flex
-
-                >
+                <Flex>
                     <Link to={`/equipment/${equipments.equipmentName}`} >
                         <Image
                             objectFit='contain'
@@ -246,8 +244,7 @@ const EquipmentItem = ({ equipments, isOffline }) => {
                                     color={queueLength <= 0 ? 'green.600' : ''}
                                     align={'center'}
                                 >
-                                    {queueLength <= 0 ? ((equipments.User != "" && equipments.User != authUser.uid) ? `Has ${queueLength + 1} pending user` : 'Available') : queueLength}
-                                    {/* {equipments.status != "PENDING" ? 'Available' : "Currently"} */}
+                                    {queueLength <= 0 ? ((equipments.User != "" && equipments.User != authUser.uid) ? `Has pending user` : 'Available') : queueLength}
                                 </Text>
                             </Center>
                             <Center>

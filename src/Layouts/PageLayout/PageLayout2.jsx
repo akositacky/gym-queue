@@ -158,7 +158,9 @@ export default function Simple({ children }) {
     const { pathname } = useLocation();
 
     const [user, loading] = useAuthState(auth);
-    const canRenderSidebar = pathname !== "/auth" && user;
+
+    const firstPath = pathname.split('/');
+    const canRenderSidebar = (firstPath[1] !== "auth" && user) && firstPath[1] !== "updateNextQueue";
 
     const checkingUserIsAuth = !user && loading;
     if (checkingUserIsAuth) return <PageLayoutSpinner />;

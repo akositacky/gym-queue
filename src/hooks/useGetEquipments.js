@@ -35,8 +35,33 @@ const useGetEquipment = () => {
                         combinedResult.push({ id: doc.id, ...doc.data(), ...realtimeResponse[doc.data().equipmentName] });
                     });
                     console.log('combinedResult',combinedResult)
+                    
+                    // const combinedEquipment = []; 
 
-                    setEquipment(combinedResult);
+                   const useEquipment =  combinedResult.filter((e) => e.User === authUser.uid && e.status === "USE");
+                   const pendingEquipment =  combinedResult.filter((e) => e.User === authUser.uid && e.status === "PENDING");
+                   const otherEquipment =  combinedResult.filter((e) => e.User !== authUser.uid && (e.status !== "PENDING" || e.status !== "USE"));
+                    // combinedResult
+                    //     // .filter((e) => e.User === authUser.uid && e.status === "PENDING")
+                    //     .map((e)=> {
+
+                    //         if (e.User === authUser.uid && e.status === "USE") {
+                    //             combinedEquipment.push(e);
+                    //         }
+                    //     });
+
+
+                    // combinedResult
+                    //     .filter((e) => e.User === authUser.uid && (e.status !== "PENDING" || e.status !== "USE"))
+                    //     .map((e)=> combinedEquipment.push(e));
+
+                    // combinedEquipment.push(useEquipment);
+                    // combinedEquipment.push(pendingEquipment);
+                    // combinedEquipment.push(pendingEquipment);
+
+                    setEquipment([...useEquipment, ...pendingEquipment, ...otherEquipment]);
+                    
+                    // console.log([...useEquipment, ...pendingEquipment, ...otherEquipment])
                 // **********************  END RTDB **********************
                 // console.log('realtimeResponse1',realtimeResponse,realtimeResponse.gymEq1);
 

@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack, Image } from '@chakra-ui/react'
 import EquipmentItem from './EquipmentItem';
 import useAuthStore from '../../store/authStore';
 import { InfoIcon } from '@chakra-ui/icons';
@@ -56,7 +56,10 @@ const HomeEquipment = () => {
     //     }
     // ];
     // console.log('equipments', equipments, authUser.uid);
-    console.log('boolPendingData', boolPendingData);
+    const pendingItem = equipments && equipments.filter((e) => e.User === authUser.uid && e.status === "PENDING");
+    const boolPendingItemData = (pendingItem && pendingItem.length > 0) ? true : false;
+
+    console.log('pendingItem', pendingItem);
     // console.log('equipments', equipments);
     // console.log('authUser', authUser);
     // console.log('userIsInEquipment', userIsInEquipment);
