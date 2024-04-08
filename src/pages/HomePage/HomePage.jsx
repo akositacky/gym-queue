@@ -1,27 +1,27 @@
 import { Box, Container, Heading, Hide, Text } from "@chakra-ui/react";
 import HomeEquipment from "../../components/HomeEquipment/HomeEquipment";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 const HomePage = () => {
-    useEffect(() => {
-        function vibrate() {
-            if (!window) {
-                return;
-            }
+    // useEffect(() => {
+    //     function vibrate() {
+    //         if (!window) {
+    //             return;
+    //         }
 
-            if (!window.navigator) {
-                return;
-            }
+    //         if (!window.navigator) {
+    //             return;
+    //         }
 
-            if (!window.navigator.vibrate) {
-                return;
-            }
+    //         if (!window.navigator.vibrate) {
+    //             return;
+    //         }
 
-            window.navigator.vibrate([200, 100, 200]);
-        }
+    //         window.navigator.vibrate([200, 100, 200]);
+    //     }
 
-        vibrate();
-    }, [])
+    //     vibrate();
+    // }, [])
 
     return (
         <>
