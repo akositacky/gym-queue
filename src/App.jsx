@@ -22,7 +22,7 @@ function App() {
         <Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
         <Route path='/equipment/:equipmentName' element={authUser ? <EquipmentQueuingPage /> : <Navigate to='/' />} />
 
-        <Route path='/updateNextQueue/:equipment' element={<NextQueuePage />} />
+        {/* <Route path='/updateNextQueue/:equipment' element={<NextQueuePage />} /> */}
 
         {authUser && authStore ? (
           // Authenticated 

@@ -3,6 +3,7 @@ import useShowToast from "./useShowToast";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useEquipmentItemStore from "../store/equipmentItemStore";
+import { getDatabase, onValue, ref } from "firebase/database";
 
 const useGetEquipmentByName = (equipmentName) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +24,22 @@ const useGetEquipmentByName = (equipmentName) => {
                     userDoc = doc.data();
                 });
 
-                setEquipment(userDoc);
+                // console.log('userDoc', userDoc);
+                // const combinedResult = [];
+                let realtimeResponse = [];
+
+                const db = getDatabase();
+                const starCountRef = ref(db, 'equipments/' + userDoc.equipmentName);
+
+                onValue(starCountRef, async (snapshot) => {
+                    realtimeResponse = snapshot.val();
+                    console.log('realtimeResponse', realtimeResponse)
+
+                    // combinedResult.push({ ...userDoc, ...realtimeResponse });
+                });
+
+
+                setEquipment({ ...userDoc, ...realtimeResponse });
             } catch (error) {
                 showToast("Error", error.message, "error");
             } finally {

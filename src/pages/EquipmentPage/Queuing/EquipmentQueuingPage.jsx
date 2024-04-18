@@ -1,21 +1,31 @@
-import { Box, Container, Flex, Heading, Image, Skeleton, SkeletonCircle, Text, VStack } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, Image, Skeleton, SkeletonCircle, Text, VStack, Spinner } from '@chakra-ui/react'
 import EquipmentQueue from '../../../components/HomeEquipment/EquipmentQueue'
 import { Link, useParams } from 'react-router-dom';
 import useGetEquipmentByName from '../../../hooks/useGetEquipmentByName';
+import EquipmentItem from '../../../components/HomeEquipment/EquipmentItem';
+import useAuthStore from '../../../store/authStore';
 
 const EquipmentQueuingPage = () => {
     const { equipmentName } = useParams();
     const { isLoading, equipment } = useGetEquipmentByName(equipmentName);
-    console.log('equipment', equipment, isLoading);
+    const authUser = useAuthStore((state) => state.user);
 
     const userNotFound = !isLoading && !equipment;
+
     if (userNotFound) return <UserNotFound />;
+    if (!equipment) return <Spinner />;
+
+    const isOffline = authUser.RFIDcode === '' ? true : false;
+
+    console.log('equipment', equipment);
 
     return (
         <Container maxW={"container.lg"}>
             <Flex gap={20}>
                 <Box flex={2} py={10}>
-                    {!isLoading && equipment && (
+                    <EquipmentItem equipments={equipment} isOffline={isOffline} />
+
+                    {/* {!isLoading && equipment && (
                         <>
                             <Heading as='h4' size='md' pb={4}>
                                 {equipment.name}
@@ -28,9 +38,9 @@ const EquipmentQueuingPage = () => {
                                 alt='Caffe Latte'
                             />
                         </>
-                    )}
+                    )} */}
 
-                    <EquipmentQueue />
+                    {/* <EquipmentQueue /> */}
                     {isLoading && <ProfileHeaderSkeleton />}
                 </Box>
             </Flex>

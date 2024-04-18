@@ -20,7 +20,6 @@ const useGetEquipment = () => {
 
             const q = query(collection(firestore, "equipments"), where("isActive", "==", true));
             try {
-
                 // **********************  RTDB **********************
                 const db = getDatabase();
                 const starCountRef = ref(db, 'equipments');
@@ -34,13 +33,15 @@ const useGetEquipment = () => {
                     querySnapshot.forEach((doc) => {
                         combinedResult.push({ id: doc.id, ...doc.data(), ...realtimeResponse[doc.data().equipmentName] });
                     });
-                    console.log('combinedResult',combinedResult)
                     
                     // const combinedEquipment = []; 
 
                    const useEquipment =  combinedResult.filter((e) => e.User === authUser.uid && e.status === "USE");
                    const pendingEquipment =  combinedResult.filter((e) => e.User === authUser.uid && e.status === "PENDING");
-                   const otherEquipment =  combinedResult.filter((e) => e.User !== authUser.uid && (e.status !== "PENDING" || e.status !== "USE"));
+                   const nextEquipment =  combinedResult.filter((e) => e.User === authUser.uid && e.status === "NEXT");
+                //    const otherEquipment =  combinedResult.filter((e) => e.User !== authUser.uid && (e.status !== "PENDING" || e.status !== "USE"));
+                   const otherEquipment =  combinedResult.filter((e) => e.User !== authUser.uid && (e.status !== "PENDING" || e.status !== "USE" || e.status !== "NEXT"));
+
                     // combinedResult
                     //     // .filter((e) => e.User === authUser.uid && e.status === "PENDING")
                     //     .map((e)=> {
@@ -59,7 +60,8 @@ const useGetEquipment = () => {
                     // combinedEquipment.push(pendingEquipment);
                     // combinedEquipment.push(pendingEquipment);
 
-                    setEquipment([...useEquipment, ...pendingEquipment, ...otherEquipment]);
+                    setEquipment([...useEquipment, ...pendingEquipment, ...nextEquipment, ...otherEquipment]);
+                    // setEquipment([...useEquipment, ...pendingEquipment, ...otherEquipment]);
                     
                     // console.log([...useEquipment, ...pendingEquipment, ...otherEquipment])
                 // **********************  END RTDB **********************

@@ -1,4 +1,4 @@
-import { Button, Flex, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spacer, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, useDisclosure } from "@chakra-ui/react";
 import { RiRfidFill } from "react-icons/ri";
 import { GrClear } from "react-icons/gr";
 import useShowToast from "../../hooks/useShowToast";
@@ -8,6 +8,8 @@ import { firestore } from "../../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import useGetRFID from "../../hooks/useGetRFID";
 import userRFIDStore from "../../store/rfidStore";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import { rtdbRemoveCurrent } from "../../utils/rtdbData";
 
 const UsersRowAction = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -115,6 +117,50 @@ function useSetRFID() {
 
         updateRFIDS(RFIDcode, falseData)
         updateUser(userUID, updateData);
+
+        console.log('userUID', userUID);
+
+        let realtimeResponse = [];
+
+        const db = getDatabase();
+        const starCountRef = ref(db, 'equipments');
+        onValue(starCountRef, (snapshot) => {
+          const equipments = snapshot.val();
+          realtimeResponse = equipments;
+        });
+
+        console.log(action, realtimeResponse);
+
+        if (action === 'clear') {
+          console.log('clearrr');
+          for (let rtdb in realtimeResponse) {
+            const equipmentData = realtimeResponse[rtdb];
+            const queue = equipmentData.queue;
+
+            // Check if nasa array
+            const queueFilter = queue !== "" ? queue.filter((e) => e.User === userUID) : null;
+
+            if (equipmentData.User === userUID) {
+              console.log('baka')
+              // await set(ref(db, "equipments/" + rtdb), rtdbRemoveCurrent(equipmentData));
+            } else if (queueFilter) {
+              const filtered = queue.filter((e) => e.User !== userUID);
+              const filteredQueue = filtered.length > 0 ? filtered : "";
+              // const filtered = realtimeQueue.length > 0 ? realtimeQueue.filter(item => item.User !== authUser.uid) : [];
+
+              // const rtdbUpdateData = {
+              //   RFID: equipmentData.RFID,
+              //   User: equipmentData.User,
+              //   queue: filteredQueue,
+              //   queueCount: queue.length - 1,
+              //   status: equipmentData.status,
+              // };
+              // await set(ref(db, "equipments/" + rtdb), rtdbUpdateData);
+            }
+          }
+          const userRef = doc(firestore, "users", userUID);
+          await updateDoc(userRef, { inQueue: [] });
+        }
 
         showToast("Success", "RFID updated successfully", "success");
       } else {

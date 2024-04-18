@@ -15,19 +15,21 @@ const useGetUserData = () => {
         const getUserProfile = async () => {
             setIsLoading(true);
             try {
-                const username = user.uid;
-                const unsub = onSnapshot(doc(firestore, "users", username), (doc) => {
-                    console.log('run');
-                    if (doc.data()) {
-                        if (user.RFIDcode !== doc.data().RFIDcode) {
-                            localStorage.setItem("user-info", JSON.stringify(doc.data()));
-                            setUser(doc.data());
-                            setUserProfile(doc.data());
-                        }
-                    }
-                });
 
-                return unsub;
+                if (user) {
+                    const username = user ? user.uid : false;
+                    const unsub = onSnapshot(doc(firestore, "users", username), (doc) => {
+                        console.log('run');
+                        if (doc.data()) {
+                            if (user.RFIDcode !== doc.data().RFIDcode) {
+                                localStorage.setItem("user-info", JSON.stringify(doc.data()));
+                                setUser(doc.data());
+                                setUserProfile(doc.data());
+                            }
+                        }
+                    });
+                    return unsub;
+                }
 
             } catch (error) {
                 showToast("Error", error.message, "error");

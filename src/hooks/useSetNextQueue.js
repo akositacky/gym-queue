@@ -1,6 +1,6 @@
 // import { useSignOut } from "react-firebase-hooks/auth";
 // import { auth } from "../firebase/firebase";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, onValue, ref, serverTimestamp, set } from "firebase/database";
 import useShowToast from "./useShowToast";
 // import useAuthStore from "../store/authStore";
 
@@ -16,7 +16,7 @@ const useSetNextQueue = () => {
             onValue(starCountRef, (snapshot) => {
                 const data = snapshot.val();
 
-                if (data.status === "USE" && data.queueCount > 0) {
+                if (data.status === "NEXT" && data.queueCount > 0) {
                     const RFID = data.queue[0]['RFID'];
                     const User = data.queue[0]['User'];
                     const newQueue = data.queue.filter(e => e.RFID !== RFID);
@@ -28,6 +28,7 @@ const useSetNextQueue = () => {
                         queue: filteredQueue,
                         queueCount: newQueue.length,
                         status: 'PENDING',
+                        timestamp: serverTimestamp()
                     }
                     set(ref(db, "equipments/" + equipmentName), rtdbUpdateData);
                 }

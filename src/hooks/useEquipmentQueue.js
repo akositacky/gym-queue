@@ -1,9 +1,10 @@
 import { useState } from "react";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, firestore } from "../firebase/firebase";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, serverTimestamp, set } from "firebase/database";
+import { rtdbHasQueue, rtdbRemoveCurrent } from "../utils/rtdbData";
 
 const useEquipmentQueue = (post) => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -26,12 +27,14 @@ const useEquipmentQueue = (post) => {
             if (authUser) {
                 // if (authUser?.assignedRfid) {
                 // console.log('isInQueue', isInQueue);
+                const userRef = doc(firestore, "users", authUser.uid);
+                const docUser = await getDoc(userRef);
+                const userData = docUser.data();
 
                 let realtimeResponse = [];
 
-                const postRef = doc(firestore, "equipments", post.id);
-
                 // **********************  RTDB **********************
+                const postRef = doc(firestore, "equipments", post.id);
                 const docSnap = await getDoc(postRef);
                 const dbRef = ref(db, "equipments/" + docSnap.data().equipmentName);
                 onValue(dbRef, (snapshot) => {
@@ -42,7 +45,10 @@ const useEquipmentQueue = (post) => {
                 // ********************** END RTDB **********************
                 let rtdbUpdateData;
                 const realtimeQueue = realtimeResponse.queue;
-                console.log('buttonMode', buttonMode)
+                console.log('buttonMode', buttonMode);
+
+                const userInQueue = userData.inQueue ? userData.inQueue : [];
+
                 if (buttonMode) {
                     // Remove queue
                     if (buttonMode == "INQUEUE") {
@@ -52,51 +58,65 @@ const useEquipmentQueue = (post) => {
                             ...realtimeResponse,
                             queueCount: realtimeResponse.queueCount - 1,
                             queue: filteredQueue,
+                            // timestamp: serverTimestamp()
                         };
                         // } else if (buttonMode == "LEAVE") {
                     } else {
-                        if (realtimeQueue.length > 0) {
-                            const filtered = realtimeQueue.length > 0 ? realtimeQueue.filter(item => item.User !== realtimeQueue[0].User) : [];
-                            const filteredQueue = filtered.length > 0 ? filtered : "";
+                        rtdbUpdateData = rtdbRemoveCurrent(realtimeResponse);
 
-                            rtdbUpdateData = {
-                                RFID: realtimeQueue[0].RFID,
-                                User: realtimeQueue[0].User,
-                                queueCount: realtimeResponse.queueCount - 1,
-                                status: "PENDING",
-                                queue: filteredQueue,
-                            }
-                        } else {
-                            // Reset equipment queue to 0
-                            rtdbUpdateData = {
-                                RFID: "",
-                                User: "",
-                                status: "FREE",
-                                queue: "",
-                                queueCount: 0,
-                            };
-                        }
+                        // if (realtimeQueue.length > 0) {
+                        //     rtdbHasQueue(realtimeQueue);
+
+                        // const filtered = realtimeQueue.length > 0 ? realtimeQueue.filter(item => item.User !== realtimeQueue[0].User) : [];
+                        // const filteredQueue = filtered.length > 0 ? filtered : "";
+
+                        // rtdbUpdateData = {
+                        //     RFID: realtimeQueue[0].RFID,
+                        //     User: realtimeQueue[0].User,
+                        //     queueCount: realtimeResponse.queueCount - 1,
+                        //     status: "PENDING",
+                        //     queue: filteredQueue,
+                        //     timestamp: serverTimestamp()
+                        // }
+                        // } else {
+                        //     // Reset equipment queue to 0
+                        //     rtdbUpdateData = {
+                        //         RFID: "",
+                        //         User: "",
+                        //         status: "FREE",
+                        //         queue: "",
+                        //         queueCount: 0,
+                        //     };
+                        // }
                     }
-                    // else {
-                    //     // Reset equipment queue to 0
-                    //     rtdbUpdateData = {
-                    //         ...realtimeResponse,
-                    //         RFID: "",
-                    //         User: "",
-                    //         status: "FREE",
-                    //         queueCount: 0,
-                    //     };
-                    // }
+                    await updateDoc(userRef, { inQueue: arrayRemove(post.id) });
+
                 } else {
+
+                    if (userInQueue && userInQueue.length > 1) {
+                        return showToast("QUEUE LIMIT REACHED", "You already have 2 pending queues. Please remove other queue.", "error");
+                    }
+
+                    // ADD TO QUEUE
+                    // IF PRODUCT IS AVAILABLE AND FREE
                     if (realtimeResponse.status === "FREE") {
+
+                        // const userQueueUpdate = userInQueue.length === 0 ? [{ equipmentId: docUser.id }] : [...userInQueue.inQueue, { equipmentId: docUser.id }];
+                        // console.log('docSnap.data()', docSnap.data())
+                        // console.log('userQueueUpdate', userQueueUpdate)
+
+                        // await updateDoc(userRef, userQueueUpdate);
+                        await updateDoc(userRef, { inQueue: arrayUnion(post.id) });
                         rtdbUpdateData = {
                             ...realtimeResponse,
                             RFID: authUser.RFIDcode,
                             User: authUser.uid,
                             status: "PENDING",
                             queueCount: 0,
+                            timestamp: serverTimestamp()
                         };
                     } else {
+                        await updateDoc(userRef, { inQueue: arrayUnion(post.id) });
                         rtdbUpdateData = {
                             ...realtimeResponse,
                             queueCount: realtimeResponse.queueCount + 1,
@@ -106,7 +126,8 @@ const useEquipmentQueue = (post) => {
                                     RFID: authUser.RFIDcode,
                                     User: authUser.uid,
                                 }
-                            ]
+                            ],
+                            // timestamp: serverTimestamp()
                         };
                     }
                 }

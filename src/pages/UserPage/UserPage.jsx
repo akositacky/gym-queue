@@ -1,15 +1,7 @@
-import { Badge, Box, Container, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Flex, Heading, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, Select, Button, IconButton } from '@chakra-ui/react'
+import { Badge, Box, Container, Flex, Heading, Input, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import useGetUsers from '../../hooks/useGetUsers';
 import { useState } from 'react';
 import UsersRowAction from '../../components/Users/UsersRowAction';
-import useGetRFID from '../../hooks/useGetRFID';
-import { RiRfidFill } from 'react-icons/ri';
-import { GrClear } from 'react-icons/gr';
-import useShowToast from '../../hooks/useShowToast';
-import useUsersStore from '../../store/usersStore';
-import { firestore } from '../../firebase/firebase';
-import { collection, doc, query, updateDoc, where } from 'firebase/firestore';
-import userRFIDStore from '../../store/rfidStore';
 
 const UserPage = () => {
     const { users } = useGetUsers();

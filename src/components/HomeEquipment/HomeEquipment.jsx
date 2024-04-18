@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack, Image } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack } from '@chakra-ui/react'
 import EquipmentItem from './EquipmentItem';
 import useAuthStore from '../../store/authStore';
 import { InfoIcon } from '@chakra-ui/icons';
@@ -10,68 +10,27 @@ const HomeEquipment = () => {
     // const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
     const authUser = useAuthStore((state) => state.user);
     const { isLoading, equipments } = useGetEquipment();
+    // const { isOpen: queueOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+
+    if (!authUser) return <Spinner />;
 
     const isPendingData = equipments && equipments.filter((e) => e.User === authUser.uid && e.status === "USE");
     const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
 
-    // const [isPendingDialog, setIsPendingDialog] = useState(isPendingData && isPendingData.length > 0 ? true : false)
-    // const isLoading = false;
-    // const equipments = [
-    //     {
-    //         "id": "47dd80UwD3xYBbfNvYOv",
-    //         "name": "Treadmill",
-    //         "imageURL": "/assets/treadmill.jpg",
-    //         // "imageURL": "https://firebasestorage.googleapis.com/v0/b/gym-locker.appspot.com/o/equipments%2F47dd80UwD3xYBbfNvYOv?alt=media&token=486a0268-8c0f-4db7-9e13-9858be76f789",
-    //         "equipmentName": "gymEq1",
-    //         "createdBy": "BYS1FyBXU6crb0K1d0FvdNpRY192",
-    //         "createdAt": 1710445034444,
-    //         "inQueue": [
-    //             "JY3qwUYP0QSHA8mvVZErHIigzJI3"
-    //         ],
-    //     },
-    //     {
-    //         "id": "8vs5WVe8xff0X1YDt3Ut",
-    //         "inQueue": [
-    //             "JY3qwUYP0QSHA8mvVZErHIigzJI3"
-    //         ],
-    //         "createdAt": 1710446306234,
-    //         "imageURL": "/assets/chestpress.jpg",
-    //         // "imageURL": "https://firebasestorage.googleapis.com/v0/b/gym-locker.appspot.com/o/equipments%2F8vs5WVe8xff0X1YDt3Ut?alt=media&token=6a8ceb6d-60d3-4ee2-b5f1-7a6b96110410",
-    //         "createdBy": "BYS1FyBXU6crb0K1d0FvdNpRY192",
-    //         "name": "Chest Press",
-    //         "equipmentName": "gymEq2"
-    //     },
-    //     {
-    //         "id": "EhMOPyQKrqOHrcKFI9sh",
-    //         "createdBy": "BYS1FyBXU6crb0K1d0FvdNpRY192",
-    //         "name": "Leg Press",
-    //         "equipmentName": "gymEq3",
-    //         "imageURL": "/assets/legpress.jpg",
-    //         // "imageURL": "https://firebasestorage.googleapis.com/v0/b/gym-locker.appspot.com/o/equipments%2FEhMOPyQKrqOHrcKFI9sh?alt=media&token=a33034d0-d0c9-4217-8845-d396cb9da2dc",
-    //         "inQueue": [
-    //             "JY3qwUYP0QSHA8mvVZErHIigzJI3",
-    //             "BYS1FyBXU6crb0K1d0FvdNpRY192"
-    //         ],
-    //         "createdAt": 1710448199322
-    //     }
-    // ];
-    // console.log('equipments', equipments, authUser.uid);
-    const pendingItem = equipments && equipments.filter((e) => e.User === authUser.uid && e.status === "PENDING");
-    const boolPendingItemData = (pendingItem && pendingItem.length > 0) ? true : false;
+    // const pendingItem = equipments && equipments.filter((e) => (e.queue && e.queue.some(item => item.User === authUser.uid)));
+    // const pendingItemQueue = pendingItem ? true : false;
 
-    console.log('pendingItem', pendingItem);
-    // console.log('equipments', equipments);
-    // console.log('authUser', authUser);
-    // console.log('userIsInEquipment', userIsInEquipment);
-    if (!authUser) return <Spinner />;
-    const userIsInEquipment = authUser && equipments && authUser.inEquipment != '' ? equipments.filter((e) => e.id === authUser.inEquipment) : null;
+    // e.User === authUser.uid && e.status === "PENDING"
+    // const isQueue = () ? "INQUEUE" : false;
+
     const isOffline = authUser.RFIDcode === '' ? true : false;
-    // const isPending = isPendingData.length > 0 ? isPendingData : false;
-    // const isPending =;
-    // console.log(' isPendingDialog', boolPendingData, isOpen, isPendingData);
+
+    // console.log('pendingItem', pendingItem);
+    // console.log('pendingItemQueue', pendingItemQueue);
+
     return (
         <>
-            <Container maxW={"container.xl"}>
+            <Container maxW={"container.xl"} pb={'100px'}>
                 <Heading
                     as='h5'
                     size='sm'
@@ -85,13 +44,13 @@ const HomeEquipment = () => {
                     fontWeight='bolder'
                     fontSize='27px'
                 >
-                    Welcome back!
+                    {isOffline ? '' : 'Welcome, you can now queue to the equipments!'}
                 </Heading>
                 {boolPendingData && (
                     <Flex
                         pr={2}
                         my={5}
-                        bgGradient='linear(to-r, cyan.500, blue.500)'
+                        bgGradient='linear(to-r, green.300, green.400)'
                         p={2}
                         borderRadius='10px'
                         color='white'
