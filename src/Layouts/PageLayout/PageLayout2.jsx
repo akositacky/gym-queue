@@ -193,7 +193,7 @@ export default function Simple({ children }) {
                                     <Link to={"/"} as={RouterLink} pl={2} cursor='pointer'>
                                         <Image
                                             p={1}
-                                            src='/assets/gym-transparent.png'
+                                            src='/IOTIVITY-LOGO.svg'
                                             h={20}
                                             mt={3}
                                             borderRadius='full'
@@ -202,7 +202,7 @@ export default function Simple({ children }) {
                                     </Link>
                                     {/* 
                             <Image
-                                src='/assets/gym-transparent.png'
+                                src='/IOTIVITY-LOGO.svg'
                                 h={12}
                                 cursor={"pointer"} /> 
                             */}
@@ -309,7 +309,7 @@ const HomeButton = () => {
         >
             <Image
                 p={1}
-                src='/assets/gym-transparent.png'
+                src='/IOTIVITY-LOGO.svg'
                 h={14}
                 mt={-5}
                 borderRadius='full'

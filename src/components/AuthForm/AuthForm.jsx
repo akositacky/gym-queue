@@ -11,7 +11,7 @@ const AuthForm = () => {
             <Box minW='sm' borderRadius={4} padding={5} >
                 <VStack spacing={4}>
                     <Image
-                        src='/assets/gym-transparent.png'
+                        src='/IOTIVITY-LOGO.svg'
                         alt="gym-logo"
                         // height={32}
                         h={32}
