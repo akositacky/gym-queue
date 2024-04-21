@@ -13,17 +13,17 @@ const EquipmentPage = () => {
                 <Heading as='h4' size='md' pb={4}>
                     Manage Equipments
                 </Heading>
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={2}>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                     {!isLoading && equipments.length > 0 &&
                         equipments.map((post) => <EquipmentClear key={post.id} equipments={post} isOffline={false} />)
                     }
                 </SimpleGrid>
                 <CreateEquipment />
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
+                {/* <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                     {!isLoading && equipments.length > 0 &&
                         equipments.map((post) => <EquipmentItemAdmin key={post.id} equipments={post} />)
                     }
-                </SimpleGrid>
+                </SimpleGrid> */}
             </Box>
         </Container>
     )

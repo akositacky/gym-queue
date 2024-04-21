@@ -60,7 +60,7 @@ const CreateEquipment = () => {
                 openDelay={500}
                 display={{ base: "block", md: "none" }}
             >
-                <Flex
+                {/* <Flex
                     alignItems={"center"}
                     gap={4}
                     _hover={{ bg: "whiteAlpha.400" }}
@@ -72,7 +72,27 @@ const CreateEquipment = () => {
                 >
                     <CreatePostLogo />
                     <Box display={{ base: "none", md: "block" }}>Create Equipment</Box>
-                </Flex>
+                </Flex> */}
+
+                <Button
+                    mt={5}
+                    flex={1}
+                    onClick={onOpen}
+                    fontSize={'sm'}
+                    rounded={'full'}
+                    bg={'blue.400'}
+                    color={'white'}
+                    boxShadow={
+                        '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
+                    }
+                    _hover={{
+                        bg: 'blue.500',
+                    }}
+                    _focus={{
+                        bg: 'blue.500',
+                    }}>
+                    Create Equipment
+                </Button>
             </Tooltip>
 
             <Modal isOpen={isOpen} onClose={onClose} size='xl'>
@@ -112,7 +132,7 @@ const CreateEquipment = () => {
 
                     <ModalFooter>
                         <Button mr={3} onClick={handlePostCreation} isLoading={isLoading}>
-                            Post
+                            Create
                         </Button>
                     </ModalFooter>
                 </ModalContent>
@@ -141,7 +161,8 @@ function useCreateEquipment() {
             inQueue: [],
             createdAt: Date.now(),
             createdBy: authUser.uid,
-            isActive: false,
+            isActive: true,
+            timeUsage: 10,
         };
 
         try {
@@ -160,7 +181,11 @@ function useCreateEquipment() {
 
             // Add to Realtime Database
             const newRT = {
-                value: 0,
+                RFID: "",
+                User: "",
+                queue: "",
+                queueCount: 0,
+                status: "FREE",
             }
 
             const equipmentName = 'gymEq' + equipmentCount;
@@ -172,7 +197,7 @@ function useCreateEquipment() {
             // if (userProfile.uid === authUser.uid) createPost({ ...newEquipmentCollection, id: postDocRef.id });
             // if (pathname !== "/" && userProfile.uid === authUser.uid) addPost({ ...newEquipmentCollection, id: postDocRef.id });
 
-            showToast("Success", "Post created successfully", "success");
+            showToast("Success", "Equipment created successfully", "success");
         } catch (error) {
             showToast("Error", error.message, "error");
         } finally {

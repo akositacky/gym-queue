@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Spacer, Stack, Text, Box } from "@chakra-ui/react"
+import { Button, Flex, Image, Spacer, Stack, Text, Box, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Center } from "@chakra-ui/react"
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
 import { convertDate } from "../../../utils/convertTime";
@@ -6,13 +6,63 @@ import { convertDate } from "../../../utils/convertTime";
 const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
     const queueLength = equipments ? equipments.queueCount : '';
     const personsText = queueLength > 1 ? 'persons' : 'person';
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleComplete = () => {
         handleClick();
     }
+    const handleOnTick = (e) => {
+        const minute = e.minutes;
+        const seconds = e.seconds;
 
+        if (minute == 3 && seconds == 0) {
+            onOpen();
+        }
+    }
+    console.log('equipments.timeUsage', equipments.timeUsage);
     return (
         <>
+            <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+                <ModalOverlay />
+                <ModalContent
+                    border={"1px solid gray"}
+                >
+                    <ModalHeader
+                        bgGradient='linear(to-r, cyan.500, blue.500)'
+                        color='white'
+                    >{equipments.name}</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6} alignContent='center'>
+                        <Text
+                            align="center"
+                            fontWeight="bold"
+                            my={2}
+                            fontSize={'22px'}
+                        >
+                            Last 3 minutes!
+                        </Text>
+                        <Center>
+                            <Image
+                                objectFit='contain'
+                                w='50%'
+                                mt={5}
+                                src={equipments.imageURL}
+                                alt='Caffe Latte'
+                                zIndex='-99'
+                            />
+                        </Center>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Text
+                            fontWeight="bold"
+                            mx={'auto'}
+                        >
+                            You only have last 3 minutes to the {equipments.name} equipment.
+                        </Text>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal >
+
             <Flex
                 boxShadow='base'
                 borderRadius='md'
@@ -37,7 +87,8 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
                             <Countdown
                                 daysInHours
                                 onComplete={handleComplete}
-                                date={convertDate(equipments.timestamp, 15)} />
+                                onTick={(e) => { handleOnTick(e) }}
+                                date={convertDate(equipments.timestamp, +equipments.timeUsage)} />
                         )}
 
                         {/* <Countdown

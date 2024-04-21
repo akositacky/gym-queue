@@ -123,9 +123,9 @@ const EquipmentItem = ({ equipments, isOffline }) => {
                                         src={equipments.imageURL}
                                         alt='Caffe Latte'
                                         zIndex='-99'
-                                        border="1px solid"
-                                        borderColor="cyan.200"
-                                        borderRadius='lg'
+                                    // border="1px solid"
+                                    // borderColor="cyan.200"
+                                    // borderRadius='lg'
                                     />
                                 </Center>
 
@@ -320,7 +320,7 @@ const EquipmentItem = ({ equipments, isOffline }) => {
                                 <Center>
 
                                     {queueLength <= 0 ?
-                                        (equipments.User != "" && equipments.User != authUser.uid) ? (
+                                        (equipments.User != "" && (equipments.User != authUser.uid) && equipments.status !== 'NEXT') ? (
                                             <Text
                                                 pt={3}
                                                 as='b'
