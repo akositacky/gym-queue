@@ -2,11 +2,13 @@ import { Button, Flex, Image, Spacer, Stack, Text, Box, Modal, ModalOverlay, Mod
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
 import { convertDate } from "../../../utils/convertTime";
+import { useState } from "react";
 
 const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
     const queueLength = equipments ? equipments.queueCount : '';
     const personsText = queueLength > 1 ? 'persons' : 'person';
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [minuteLeft, setMinuteLeft] = useState();
 
     const handleComplete = () => {
         handleClick();
@@ -15,7 +17,8 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
         const minute = e.minutes;
         const seconds = e.seconds;
 
-        if (minute == 3 && seconds == 0) {
+        if ((minute == 3 && seconds == 0) || (minute == 1 && seconds == 0)) {
+            setMinuteLeft(minute);
             onOpen();
         }
     }
@@ -39,7 +42,7 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
                             my={2}
                             fontSize={'22px'}
                         >
-                            Last 3 minutes!
+                            Last {minuteLeft} minutes!
                         </Text>
                         <Center>
                             <Image

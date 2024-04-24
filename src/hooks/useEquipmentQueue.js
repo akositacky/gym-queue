@@ -113,7 +113,8 @@ const useEquipmentQueue = (post) => {
                             User: authUser.uid,
                             status: "PENDING",
                             queueCount: 0,
-                            timestamp: serverTimestamp()
+                            timestamp: serverTimestamp(),
+                            timeUsage: post.timeUsage,
                         };
                     } else {
                         await updateDoc(userRef, { inQueue: arrayUnion(post.id) });

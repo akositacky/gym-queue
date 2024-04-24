@@ -141,21 +141,23 @@ function useSetRFID() {
             const queueFilter = queue !== "" ? queue.filter((e) => e.User === userUID) : null;
 
             if (equipmentData.User === userUID) {
-              console.log('baka')
-              // await set(ref(db, "equipments/" + rtdb), rtdbRemoveCurrent(equipmentData));
+              // console.log('baka')
+              await set(ref(db, "equipments/" + rtdb), rtdbRemoveCurrent(equipmentData));
             } else if (queueFilter) {
               const filtered = queue.filter((e) => e.User !== userUID);
               const filteredQueue = filtered.length > 0 ? filtered : "";
               // const filtered = realtimeQueue.length > 0 ? realtimeQueue.filter(item => item.User !== authUser.uid) : [];
 
-              // const rtdbUpdateData = {
-              //   RFID: equipmentData.RFID,
-              //   User: equipmentData.User,
-              //   queue: filteredQueue,
-              //   queueCount: queue.length - 1,
-              //   status: equipmentData.status,
-              // };
-              // await set(ref(db, "equipments/" + rtdb), rtdbUpdateData);
+              const rtdbUpdateData = {
+                RFID: equipmentData.RFID,
+                User: equipmentData.User,
+                queue: filteredQueue,
+                queueCount: queue.length - 1,
+                status: equipmentData.status,
+                timestamp: equipmentData.timestamp,
+                timeUsage: equipmentData.timeUsage,
+              };
+              await set(ref(db, "equipments/" + rtdb), rtdbUpdateData);
             }
           }
           const userRef = doc(firestore, "users", userUID);

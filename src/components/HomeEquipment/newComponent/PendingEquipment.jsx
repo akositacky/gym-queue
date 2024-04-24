@@ -4,7 +4,7 @@ import Countdown from 'react-countdown';
 import { convertDate } from "../../../utils/convertTime";
 import EquipmentBox from "../assets/EquipmentBox";
 
-const PendingItem = ({ equipments, handleClick }) => {
+const PendingEquipment = ({ equipments, handleClick }) => {
     const queueLength = equipments ? equipments.queueCount : '';
     const personsText = queueLength > 1 ? 'persons' : 'person';
 
@@ -142,4 +142,4 @@ const PendingItem = ({ equipments, handleClick }) => {
     )
 }
 
-export default PendingItem
+export default PendingEquipment

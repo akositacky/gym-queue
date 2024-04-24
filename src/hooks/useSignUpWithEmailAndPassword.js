@@ -41,7 +41,7 @@ const useSignUpWithEmailAndPassword = () => {
                     profilePicURL: "",
                     RFIDcode: "",
                     User: "",
-                    // posts: [],
+                    isActive: true,
                     userRole: 'user',
                     createdAt: Date.now(),
                 };

@@ -10,7 +10,6 @@ import CreatePost from "../../components/Sidebar/CreatePost";
 const ProfilePage = () => {
     const { username } = useParams();
     const { isLoading, userProfile } = useGetUserProfileByUsername(username);
-
     const userNotFound = !isLoading && !userProfile;
     if (userNotFound) return <UserNotFound />;
 

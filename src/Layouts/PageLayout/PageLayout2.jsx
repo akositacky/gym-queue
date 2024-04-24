@@ -21,7 +21,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 // import Sidebar from '../../components/Sidebar/Sidebar'
 import useLogout from '../../hooks/useLogout'
-import { BiLogOut, BiUserCircle } from 'react-icons/bi'
+import { BiLogOut } from 'react-icons/bi'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from "../../firebase/firebase";
 import { Link, useLocation } from "react-router-dom";

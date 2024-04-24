@@ -47,13 +47,13 @@ const EditProfile = ({ isOpen, onClose }) => {
         <>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent bg={"black"} boxShadow={"xl"} border={"1px solid gray"} mx={3}>
+                <ModalContent bg={"white"} boxShadow={"xl"} border={"1px solid gray"} mx={3} >
                     <ModalHeader />
                     <ModalCloseButton />
                     <ModalBody>
                         {/* Container Flex */}
-                        <Flex bg={"black"}>
-                            <Stack spacing={4} w={"full"} maxW={"md"} bg={"black"} p={6} my={0}>
+                        <Flex bg={"white"} my={0}>
+                            <Stack spacing={4} w={"full"} maxW={"md"} bg={"white"} px={6} pb={6} >
                                 <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
                                     Edit Profile
                                 </Heading>

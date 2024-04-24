@@ -1,8 +1,8 @@
-import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Text, Tooltip, VStack } from '@chakra-ui/react'
-import EquipmentItem from './EquipmentItem';
+import { Box, Container, Flex, Heading, Link, SimpleGrid, Skeleton, Spacer, Spinner, Stack, Text, Tooltip, VStack } from '@chakra-ui/react'
 import useAuthStore from '../../store/authStore';
 import { InfoIcon } from '@chakra-ui/icons';
 import useGetEquipment from '../../hooks/useGetEquipments';
+import EquipmentDetails from './EquipmentDetails';
 
 const HomeEquipment = () => {
     // const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
@@ -13,6 +13,7 @@ const HomeEquipment = () => {
     // const { isOpen: queueOpen, onClose } = useDisclosure({ defaultIsOpen: true });
 
     if (!authUser) return <Spinner />;
+    if (!equipments) return <Spinner />;
 
     const isPendingData = equipments && equipments.filter((e) => e.User === authUser.uid && e.status === "USE");
     const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
@@ -25,12 +26,13 @@ const HomeEquipment = () => {
 
     const isOffline = authUser.RFIDcode === '' ? true : false;
 
-    // console.log('pendingItem', pendingItem);
-    // console.log('pendingItemQueue', pendingItemQueue);
+    // const isPending = (equipments.User == authUser.uid) && equipments.status == "PENDING" ? true : false;
+    // const isUse = (equipments.User == authUser.uid) && equipments.status == "USE" ? true : false;
+    // const isNext = (equipments.User == authUser.uid) && equipments.status == "NEXT" ? true : false;
 
     return (
         <>
-            <Container maxW={"container.xl"} pb={'100px'}>
+            <Container maxW={"container.xl"} pb={'100px'} >
                 <Heading
                     as='h5'
                     size='sm'
@@ -68,30 +70,37 @@ const HomeEquipment = () => {
                     </Flex>
                 )}
 
-                <Flex
-                    py={3}
-                    pb={5}
-                    pt={5}
-                >
-                    <Heading
-                        as='h6'
-                        size='xs'
-                        color='gray.500'
-                    >
+                <Flex py={3} pb={5} pt={5} >
+                    <Heading as='h6' size='xs' color='gray.500' >
                         Available Equipments ({`${equipments ? equipments.length : ''}`})
                     </Heading>
                     <Spacer />
                     <Flex alignItems='center' gap='2'>
                         {!isOffline ? (
                             <>
-                                <Box h={3} w={3} bgColor='green' borderRadius='full' boxShadow='dark-lg' />
-                                <Text
-                                    as='b'
-                                    fontSize='xs'
-                                    color='gray.600'
-                                >
-                                    Available
-                                </Text>
+                                <Stack>
+                                    <Flex
+                                        alignItems="center" gap={2}
+                                        marginLeft="auto"
+                                        textAlign="right"
+                                    >
+                                        <Box h={3} w={3} bgColor='green' borderRadius='full' boxShadow='dark-lg' />
+                                        <Text
+                                            as='b'
+                                            fontSize='xs'
+                                            color='gray.600'
+                                        >
+                                            Available
+                                        </Text>
+                                    </Flex>
+                                    <Text
+                                        as='b'
+                                        fontSize='xs'
+                                        color='gray.600'
+                                    >
+                                        Currently Using: {authUser.RFIDname}
+                                    </Text>
+                                </Stack>
                             </>
                         ) : (
                             <>
@@ -110,7 +119,7 @@ const HomeEquipment = () => {
                         )}
                     </Flex>
                 </Flex>
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={2}>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                     {isLoading &&
                         [0, 1, 2].map((_, idx) => (
                             <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10} pt={5}>
@@ -128,10 +137,14 @@ const HomeEquipment = () => {
                         ))}
 
                     {!isLoading && equipments.length > 0 &&
-                        equipments.map((post) => <EquipmentItem key={post.id} equipments={post} isOffline={isOffline} />)
+                        equipments.map((post) => <EquipmentDetails key={post.id} equipments={post} isOffline={isOffline} />)
                     }
 
+                    {/* {!isLoading && equipments.length > 0 &&
+                        equipments.map((post) => <EquipmentItem key={post.id} equipments={post} isOffline={isOffline} />)
+                    } */}
                 </SimpleGrid>
+
                 {!isLoading && equipments.length === 0 && (
                     <>
                         <Flex>

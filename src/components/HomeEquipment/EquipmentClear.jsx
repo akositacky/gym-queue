@@ -1,25 +1,27 @@
-import { Avatar, Box, Button, Center, Flex, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Link, useNavigate } from "react-router-dom";
+import { Avatar, Box, Button, Flex, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import useEquipmentQueueDebug from "../../hooks/useEquipmentQueueDebug";
 import { useState } from "react";
+import useEquipmentQueue from "../../hooks/useEquipmentQueue";
+import useUsersStore from "../../store/usersStore";
 
-const EquipmentClear = ({ equipments, isOffline }) => {
-    const { isInQueue, handleEquipmentQueueClear, handleEquipmentTime, isUpdating } = useEquipmentQueueDebug(equipments);
+const EquipmentClear = ({ equipments }) => {
+    const { handleEquipmentQueueClear, handleEquipmentTime, isUpdating } = useEquipmentQueueDebug(equipments);
     const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const queueText = isInQueue ? 'Remove Queue' : 'Join Queue';
-    const queueButtonVariant = isInQueue ? 'outline' : 'solid';
-    const queueButtonColor = isInQueue ? 'red' : 'blue';
-    const queueButtonBG = isInQueue ? '' : 'cyan.600';
-
-    const queueLength = equipments ? equipments.queueCount : '';
-    const personsText = queueLength > 1 ? 'persons' : 'person';
+    const { handleEquipmentQueue } = useEquipmentQueue(equipments);
 
     const [timeUsage, setTimeUsage] = useState(equipments.timeUsage);
-    const navigate = useNavigate();
+
+    const { users } = useUsersStore();
+    const userDetails = users ? users.filter((e) => e.uid == equipments.User)[0] : null;
+    console.log('userDetails', userDetails);
+
     const timeUsageClick = async () => {
         await handleEquipmentTime(timeUsage);
         // navigate(0);
+    }
+
+    const handleNext = () => {
+        handleEquipmentQueue("INQUEUE");
     }
     return (
         <>
@@ -54,10 +56,9 @@ const EquipmentClear = ({ equipments, isOffline }) => {
                 boxShadow={'2xl'}
                 rounded={'lg'}
                 p={6}
-                textAlign={'center'}>
-                <Flex
-                    gap={2}
-                >
+                textAlign={'center'}
+            >
+                <Flex gap={2}>
                     <Avatar
                         size={'xl'}
                         src={equipments.imageURL}
@@ -67,8 +68,8 @@ const EquipmentClear = ({ equipments, isOffline }) => {
                             content: '""',
                             w: 4,
                             h: 4,
-                            bg: 'green.300',
                             border: '2px solid white',
+                            bg: `${equipments.status !== "FREE" ? 'red.300' : 'green.300'}`,
                             rounded: 'full',
                             pos: 'absolute',
                             bottom: 0,
@@ -89,9 +90,66 @@ const EquipmentClear = ({ equipments, isOffline }) => {
                         textAlign={'right'}
                         flex={1}
                     >
-                        <Text fontWeight={600} mb={4}>
-                            Time Limit: {equipments.timeUsage}
-                        </Text>
+                        <Flex
+                            alignItems="center" gap={2}
+                            marginLeft="auto"
+                            textAlign="right"
+                            direction="row"
+                            width={'fit-content'}
+                        >
+                            <Text>
+                                Current User:
+                            </Text>
+                            <Text fontWeight={600}>
+                                {userDetails ? userDetails.fullName : '-'}
+                            </Text>
+                        </Flex>
+
+                        <Flex
+                            alignItems="center" gap={2}
+                            marginLeft="auto"
+                            textAlign="right"
+                            direction="row"
+                            width={'fit-content'}
+                        >
+                            <Text>
+                                Queue:
+                            </Text>
+                            <Text fontWeight={600}>
+                                {equipments.queueCount}
+                            </Text>
+                        </Flex>
+
+                        <Flex
+                            alignItems="center" gap={2}
+                            marginLeft="auto"
+                            textAlign="right"
+                            direction="row"
+                            width={'fit-content'}
+                        >
+                            <Text>
+                                Time Usage Limit:
+                            </Text>
+                            <Text fontWeight={600}>
+                                {equipments.timeUsage}
+                            </Text>
+                        </Flex>
+
+                        <Flex
+                            alignItems="center" gap={2}
+                            marginLeft="auto"
+                            textAlign="right"
+                            direction="row"
+                            width={'fit-content'}
+                            mb={4}
+                        >
+                            <Text>
+                                Current Status:
+                            </Text>
+                            <Text fontWeight={600}>
+                                {equipments.status}
+                            </Text>
+                        </Flex>
                     </Box>
                 </Flex>
                 <Stack mt={8} direction={'row'} spacing={4}>
@@ -104,6 +162,23 @@ const EquipmentClear = ({ equipments, isOffline }) => {
                             bg: 'gray.200',
                         }}>
                         Set Time Usage
+                    </Button>
+                    <Button
+                        flex={1}
+                        bg={'yellow.600'}
+                        color={'white'}
+                        onClick={handleNext}
+                        fontSize={'sm'}
+                        rounded={'full'}
+                        isDisabled={equipments.queueCount == 0}
+                        _hover={{
+                            bg: 'yellow.500',
+                        }}
+                        _focus={{
+                            bg: 'yellow.500',
+                        }}>
+
+                        Trigger Next User
                     </Button>
                     <Button
                         flex={1}
@@ -121,8 +196,9 @@ const EquipmentClear = ({ equipments, isOffline }) => {
                         _focus={{
                             bg: 'blue.500',
                         }}>
-                        Clear
+                        Clear Queue
                     </Button>
+
                 </Stack>
             </Box>
 

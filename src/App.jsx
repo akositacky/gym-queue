@@ -8,7 +8,6 @@ import EquipmentQueuingPage from "./pages/EquipmentPage/Queuing/EquipmentQueuing
 import useAuthStore from "./store/authStore";
 import RoutePage from "./pages/RoutePage/RoutePage";
 import useGetUserData from "./hooks/useGetUserData";
-import NextQueuePage from "./pages/NextQueue/NextQueuePage";
 
 function App() {
   const [authUser] = useAuthState(auth);
@@ -21,8 +20,6 @@ function App() {
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
         <Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
         <Route path='/equipment/:equipmentName' element={authUser ? <EquipmentQueuingPage /> : <Navigate to='/' />} />
-
-        {/* <Route path='/updateNextQueue/:equipment' element={<NextQueuePage />} /> */}
 
         {authUser && authStore ? (
           // Authenticated 

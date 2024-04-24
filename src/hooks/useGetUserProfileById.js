@@ -2,27 +2,28 @@ import { useEffect, useState } from "react";
 import useShowToast from "./useShowToast";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
-import useUsersStore from "../store/usersStore";
+import useUserProfileStore from "../store/userProfileStore";
 
-const useGetUsers = () => {
+const useGetUserProfileById = (username) => {
     const [isLoading, setIsLoading] = useState(true);
     const showToast = useShowToast();
-    const { users, setUsers } = useUsersStore();
+    const { userProfile, setUserProfile } = useUserProfileStore();
 
     useEffect(() => {
-        const getEquipment = async () => {
+        const getUserProfile = async () => {
             setIsLoading(true);
             try {
-                const q = query(collection(firestore, "users"), where("userRole", "==", "user"), where("isActive", "==", true));
+                const q = query(collection(firestore, "users"), where("uid", "==", username));
                 const querySnapshot = await getDocs(q);
-                const usersData = [];
 
-                if (querySnapshot.empty) return setUsers(null);
+                if (querySnapshot.empty) return setUserProfile(null);
 
+                let userDoc;
                 querySnapshot.forEach((doc) => {
-                    usersData.push({ id: doc.id, ...doc.data() });
+                    userDoc = doc.data();
                 });
-                setUsers(usersData);
+
+                setUserProfile(userDoc);
             } catch (error) {
                 showToast("Error", error.message, "error");
             } finally {
@@ -30,10 +31,10 @@ const useGetUsers = () => {
             }
         };
 
-        getEquipment();
-    }, [setUsers, showToast]);
+        getUserProfile();
+    }, [setUserProfile, username, showToast]);
 
-    return { isLoading, users };
+    return { isLoading, userProfile };
 };
 
-export default useGetUsers;
+export default useGetUserProfileById;

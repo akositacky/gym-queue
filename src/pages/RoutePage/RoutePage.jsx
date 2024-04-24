@@ -6,10 +6,12 @@ import UserPage from "../UserPage/UserPage";
 import RFIDPage from "../RFIDPage/RFIDPage";
 import ProfilePage from "../ProfilePage/ProfilePage";
 import Logout from "./Logout";
+import useGetUsers from "../../hooks/useGetUsers";
+import UserQueueProfile from "../../components/User/UserQueueProfile";
 
 const RoutePage = () => {
     const authStore = useAuthStore((state) => state.user);
-
+    useGetUsers();
     return (
         <>
             <Routes>
@@ -23,7 +25,8 @@ const RoutePage = () => {
                         <Route path='/:username' element={<ProfilePage />} />
                     </Route>
                 )}
-                <Route path='/*' element={<HomePage />} />
+                {/* <Route path='/*' element={<HomePage />} /> */}
+                <Route path='/:username' element={<UserQueueProfile />} />
             </Routes>
         </>
     )

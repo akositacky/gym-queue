@@ -1,7 +1,6 @@
 import { Box, Container, Heading, SimpleGrid } from '@chakra-ui/react'
 import CreateEquipment from '../../components/HomeEquipment/CreateEquipment'
 import useGetEquipment from '../../hooks/useGetEquipments';
-import EquipmentItemAdmin from '../../components/HomeEquipment/EquimentItemAdmin';
 import EquipmentClear from '../../components/HomeEquipment/EquipmentClear';
 
 const EquipmentPage = () => {
@@ -15,7 +14,7 @@ const EquipmentPage = () => {
                 </Heading>
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                     {!isLoading && equipments.length > 0 &&
-                        equipments.map((post) => <EquipmentClear key={post.id} equipments={post} isOffline={false} />)
+                        equipments.map((post) => <EquipmentClear key={post.id} equipments={post} />)
                     }
                 </SimpleGrid>
                 <CreateEquipment />
