@@ -26,15 +26,8 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
     const queueButtonBG = mode ? 'white' : 'cyan.600';
 
     const queueLength = equipments ? equipments.queueCount : '';
-    // const personsText = queueLength > 1 ? 'persons' : 'person';
-
-    // console.log('queueLength', queueLength);
     const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
-    // const isPendingData = equipments.User === authUser.uid && equipments.status == "PENDING" ? true : false;
-
     const { isOpen: isOpenLeave, onOpen: onOpenLeave, onClose: onCloseLeave } = useDisclosure({ defaultIsOpen: false });
-
-    // const equipmentBgColor = isOffline ? 'gray.200' : (isUse && 'gray.50') || (isPending && 'yellow.100') || (isQueue && 'blue.100');
 
     let queueNumber;
     let count = 0;
@@ -45,7 +38,6 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
         }
     });
 
-    // bgColor={'green.500'}
     const handleClose = () => {
         onClose();
     }
@@ -62,7 +54,6 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
 
     const isInQueueLength = (queueLength >= 1 && isQueue) ? true : false;
     const { isOpen: queueOpen, onClose: queueClose } = useDisclosure({ defaultIsOpen: isInQueueLength });
-    // console.log('isInQueueLength', isInQueueLength);
 
     useEffect(() => {
         function vibrate() {

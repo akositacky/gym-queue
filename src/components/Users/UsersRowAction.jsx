@@ -124,22 +124,19 @@ function useSetRFID() {
 
         const db = getDatabase();
         const starCountRef = ref(db, 'equipments');
+
         onValue(starCountRef, (snapshot) => {
           const equipments = snapshot.val();
           realtimeResponse = equipments;
         });
 
-        console.log(action, realtimeResponse);
-
         if (action === 'clear') {
-          console.log('clearrr');
           for (let rtdb in realtimeResponse) {
             const equipmentData = realtimeResponse[rtdb];
             const queue = equipmentData.queue;
 
             // Check if nasa array
             const queueFilter = queue !== "" ? queue.filter((e) => e.User === userUID) : null;
-
             if (equipmentData.User === userUID) {
               // console.log('baka')
               await set(ref(db, "equipments/" + rtdb), rtdbRemoveCurrent(equipmentData));

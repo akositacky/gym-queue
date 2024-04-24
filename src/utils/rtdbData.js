@@ -39,6 +39,7 @@ export const rtdbRemoveCurrent = (realtimeResponse) => {
             status: "FREE",
             queue: "",
             queueCount: 0,
+            timestamp: serverTimestamp()
         };
     }
 }

@@ -19,7 +19,6 @@ const useGetUserData = () => {
                 if (user) {
                     const username = user ? user.uid : false;
                     const unsub = onSnapshot(doc(firestore, "users", username), (doc) => {
-                        console.log('run');
                         if (doc.data()) {
                             if (user.RFIDcode !== doc.data().RFIDcode) {
                                 localStorage.setItem("user-info", JSON.stringify(doc.data()));
