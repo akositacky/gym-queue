@@ -3,8 +3,11 @@ import useAuthStore from '../../store/authStore';
 import { InfoIcon } from '@chakra-ui/icons';
 import useGetEquipment from '../../hooks/useGetEquipments';
 import EquipmentDetails from './EquipmentDetails';
+import useGetUserData from "../../hooks/useGetUserData";
 
 const HomeEquipment = () => {
+    useGetUserData();
+
     // const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
     // const isPendingData = equipments && equipments.filter((e) => e.User === authUser.uid);
     // const boolPendingData = (isPendingData && isPendingData.length > 0) ? true : false;
