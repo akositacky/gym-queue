@@ -4,7 +4,6 @@ import useAuthStore from "../../store/authStore";
 import EquipmentPage from "../EquipmentPage/EquipmentPage";
 import UserPage from "../UserPage/UserPage";
 import RFIDPage from "../RFIDPage/RFIDPage";
-import ProfilePage from "../ProfilePage/ProfilePage";
 import Logout from "./Logout";
 import useGetUsers from "../../hooks/useGetUsers";
 import UserQueueProfile from "../../components/User/UserQueueProfile";
@@ -22,7 +21,7 @@ const RoutePage = () => {
                         <Route exact path='/equipment' element={<EquipmentPage />} />
                         <Route path='/users' element={<UserPage />} />
                         <Route path='/bracelet' element={<RFIDPage />} />
-                        <Route path='/:username' element={<ProfilePage />} />
+                        {/* <Route path='/:username' element={<ProfilePage />} /> */}
                     </Route>
                 )}
                 {/* <Route path='/*' element={<HomePage />} /> */}

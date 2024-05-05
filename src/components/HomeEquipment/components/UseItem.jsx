@@ -13,6 +13,7 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
     const handleComplete = () => {
         handleClick();
     }
+
     const handleOnTick = (e) => {
         const minute = e.minutes;
         const seconds = e.seconds;
@@ -22,7 +23,7 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
             onOpen();
         }
     }
-    console.log('equipments.timeUsage', equipments.timeUsage);
+    // console.log('equipments.timeUsage', equipments.timeUsage);
     return (
         <>
             <Modal isOpen={isOpen} onClose={onClose} size='xl'>

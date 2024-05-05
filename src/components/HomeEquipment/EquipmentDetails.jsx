@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Center, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, useDisclosure } from "@chakra-ui/react"
+import { Avatar, Box, Button, Center, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, SimpleGrid, Stack, Text, useDisclosure } from "@chakra-ui/react"
 import useEquipmentQueue from "../../hooks/useEquipmentQueue";
 import useAuthStore from "../../store/authStore";
 import PendingItem from "./components/PendingItem";
@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import NextQueuePage from "../../pages/NextQueue/NextQueuePage";
 import EquipmentBox from "./assets/EquipmentBox";
 import { numberSuffix } from "../../utils/numberSuffix";
+import { useState } from "react";
 
 const EquipmentDetails = ({ equipments, isOffline }) => {
     const { handleEquipmentQueue } = useEquipmentQueue(equipments);
@@ -26,15 +27,8 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
     const queueButtonBG = mode ? 'white' : 'cyan.600';
 
     const queueLength = equipments ? equipments.queueCount : '';
-    // const personsText = queueLength > 1 ? 'persons' : 'person';
-
-    // console.log('queueLength', queueLength);
     const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
-    // const isPendingData = equipments.User === authUser.uid && equipments.status == "PENDING" ? true : false;
-
     const { isOpen: isOpenLeave, onOpen: onOpenLeave, onClose: onCloseLeave } = useDisclosure({ defaultIsOpen: false });
-
-    // const equipmentBgColor = isOffline ? 'gray.200' : (isUse && 'gray.50') || (isPending && 'yellow.100') || (isQueue && 'blue.100');
 
     let queueNumber;
     let count = 0;
@@ -45,7 +39,6 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
         }
     });
 
-    // bgColor={'green.500'}
     const handleClose = () => {
         onClose();
     }
@@ -62,7 +55,8 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
 
     const isInQueueLength = (queueLength >= 1 && isQueue) ? true : false;
     const { isOpen: queueOpen, onClose: queueClose } = useDisclosure({ defaultIsOpen: isInQueueLength });
-    // console.log('isInQueueLength', isInQueueLength);
+    const { isOpen: timeUsageisOpen, onOpen: timeUsageOnOpen, onClose: timeUsageOnClose } = useDisclosure();
+    const [value, setValue] = useState('5');
 
     useEffect(() => {
         function vibrate() {
@@ -85,6 +79,13 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
             vibrate();
         }
     }, [isPending, queueOpen])
+
+    const handleSetTimeUsage = () => {
+        // handleClick()
+        !mode && onOpen();
+        handleEquipmentQueue(mode, value);
+        timeUsageOnClose();
+    }
 
     return (
         <>
@@ -178,6 +179,54 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
                                     onClick={() => handleLeave()}
                                 >
                                     Leave
+                                </Button>
+                            </ModalBody>
+                        </ModalContent>
+                    </Modal >
+
+                    <Modal
+                        isOpen={timeUsageisOpen}
+                        onClose={timeUsageOnClose}
+                        size={{ base: "xs", md: "xl" }}
+                    >
+                        <ModalOverlay />
+
+                        <ModalContent
+                            border={"1px solid gray"}
+                        >
+                            <ModalHeader
+                            // bgGradient='linear(to-r, cyan.500, blue.500)'
+                            // color='white'
+                            >Select Time Usage</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6} alignContent='center'>
+                                <Text
+                                    align="center"
+                                    fontWeight="bold"
+                                    my={2}
+                                >
+                                    Please select time usage for the equipment
+                                </Text>
+                                <Text>
+                                    Time value: {value}
+                                </Text>
+                                <RadioGroup onChange={setValue} value={value} defaultValue='5'>
+                                    <Stack direction='row'>
+                                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} width={'100%'} my={5} >
+                                            <Radio value='5'>5 Minutes</Radio>
+                                            <Radio value='10'>10 Minutes</Radio>
+                                            <Radio value='15'>15 Minutes</Radio>
+                                            <Radio value='20'>20 Minutes</Radio>
+                                            <Radio value='25'>25 Minutes</Radio>
+                                            <Radio value='30'>30 Minutes</Radio>
+                                        </SimpleGrid>
+                                    </Stack>
+                                </RadioGroup>
+
+                                <Button
+                                    onClick={() => handleSetTimeUsage()}
+                                >
+                                    Submit
                                 </Button>
                             </ModalBody>
                         </ModalContent>
@@ -302,16 +351,16 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
                                         </Text>
                                     )}
 
-                                <Text mb={4} fontWeight={'bold'} fontSize='sm'>
+                                {/* <Text mb={4} fontWeight={'bold'} fontSize='sm'>
                                     Equipment Usage: {equipments.timeUsage} mins
-                                </Text>
+                                </Text> */}
                             </Box>
                         </Flex>
                         <Stack mt={8} direction={'row'} spacing={4}>
                             <Button
                                 flex={1}
                                 variant={queueButtonVariant}
-                                onClick={() => { handleClick() }}
+                                onClick={timeUsageOnOpen}
                                 fontSize={'sm'}
                                 rounded={'full'}
                                 isDisabled={isOffline}

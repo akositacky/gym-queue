@@ -44,7 +44,9 @@ const PendingItem = ({ equipments, handleClick }) => {
                                     date={convertDate(equipments.timestamp, 5)} />
                             )}
                         </Box>
-
+                        <Text mb={2} fontSize={'small'}>
+                            Equipment Usage: {equipments.timeUsage} minutes
+                        </Text>
                         <Link to={`/equipment/${equipments.equipmentName}`} >
                             <Image
                                 objectFit='contain'

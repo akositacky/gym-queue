@@ -7,12 +7,10 @@ import Simple from "./Layouts/PageLayout/PageLayout2";
 import EquipmentQueuingPage from "./pages/EquipmentPage/Queuing/EquipmentQueuingPage";
 import useAuthStore from "./store/authStore";
 import RoutePage from "./pages/RoutePage/RoutePage";
-import useGetUserData from "./hooks/useGetUserData";
 
 function App() {
   const [authUser] = useAuthState(auth);
   const authStore = useAuthStore((state) => state.user);
-  useGetUserData();
 
   return (
     <Simple>

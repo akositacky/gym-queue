@@ -1,20 +1,29 @@
 import { Link, useParams } from "react-router-dom";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
-import { Avatar, Box, Button, Center, Container, Flex, Heading, Skeleton, SkeletonCircle, Stack, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Box, Button, Center, Container, Flex, Heading, Skeleton, SkeletonCircle, Spinner, Stack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import EditProfile from "../Profile/EditProfile";
+import useAuthStore from "../../store/authStore";
 
 const UserQueueProfile = () => {
     const { username } = useParams();
     const { isLoading, userProfile } = useGetUserProfileByUsername(username);
-    const userNotFound = !isLoading && !userProfile;
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const authUser = useAuthStore((state) => state.user);
+
+    const userNotFound = !isLoading && !userProfile;
+
+    console.log('userProfile', userProfile, isLoading, userNotFound);
 
     if (userNotFound) return (
         <UserNotFound />
     );
 
-    console.log('userProfile', userProfile);
+    if (!userProfile) return <Spinner />;
+
+    const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
+
     return (
         <Container maxW='container.lg' py={5} pt={10}>
             {isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
@@ -38,8 +47,8 @@ const UserQueueProfile = () => {
                             content: '""',
                             w: 4,
                             h: 4,
-                            bg: 'green.300',
                             border: '2px solid white',
+                            bg: `${userProfile.RFIDname == "" ? 'red.300' : 'green.300'}`,
                             rounded: 'full',
                             pos: 'absolute',
                             bottom: 0,
@@ -52,37 +61,48 @@ const UserQueueProfile = () => {
                     <Text fontWeight={600} color={'gray.500'} mb={4}>
                         {userProfile.email}
                     </Text>
-                    <Text
-                        textAlign={'center'}
-                        // color={useColorModeValue('gray.700', 'gray.400')}
-                        px={3}>
-                        {userProfile.bio}
-                    </Text>
 
-                    <Center>
-                        <Stack mt={8} direction={'row'} spacing={4}
-                            w={'50%'}
-                        >
-                            <Button
-                                flex={1}
-                                fontSize={'sm'}
-                                rounded={'full'}
-                                bg={'blue.400'}
-                                color={'white'}
-                                onClick={onOpen}
-                                boxShadow={
-                                    '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
-                                }
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}
-                                _focus={{
-                                    bg: 'blue.500',
-                                }}>
-                                Edit Profile
-                            </Button>
-                        </Stack>
-                    </Center>
+                    {userProfile.bio == '' ? (
+                        <Text
+                            textAlign={'center'}
+                            color={'gray.400'}
+                            fontSize={'sm'}
+                            px={3}>
+                            {visitingOwnProfileAndAuth ? 'Please add a bio' : ''}
+                        </Text>
+                    ) : (
+                        <Text
+                            textAlign={'center'}
+                            px={3}>
+                            {userProfile.bio}
+                        </Text>
+                    )}
+                    {visitingOwnProfileAndAuth && (
+                        <Center>
+                            <Stack mt={8} direction={'row'} spacing={4}
+                                w={'50%'}
+                            >
+                                <Button
+                                    flex={1}
+                                    fontSize={'sm'}
+                                    rounded={'full'}
+                                    bg={'blue.400'}
+                                    color={'white'}
+                                    onClick={onOpen}
+                                    boxShadow={
+                                        '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
+                                    }
+                                    _hover={{
+                                        bg: 'blue.500',
+                                    }}
+                                    _focus={{
+                                        bg: 'blue.500',
+                                    }}>
+                                    Edit Profile
+                                </Button>
+                            </Stack>
+                        </Center>
+                    )}
                 </Box>
             )
             }
