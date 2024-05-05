@@ -10,6 +10,7 @@ export const rtdbHasQueue = (realtimeResponse) => {
         RFID: realtimeQueue[0].RFID,
         User: realtimeQueue[0].User,
         queueCount: realtimeResponse.queueCount - 1,
+        timeUsage: realtimeQueue[0].timeUsage,
         status: "PENDING",
         queue: filteredQueue,
         timestamp: serverTimestamp()
@@ -29,6 +30,7 @@ export const rtdbRemoveCurrent = (realtimeResponse) => {
             queueCount: realtimeResponse.queueCount - 1,
             status: "PENDING",
             queue: filteredQueue,
+            timeUsage: realtimeQueue[0].timeUsage,
             timestamp: serverTimestamp()
         }
     } else {

@@ -4,7 +4,7 @@ import useShowToast from "./useShowToast";
 import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, firestore } from "../firebase/firebase";
 import { onValue, ref, serverTimestamp, set } from "firebase/database";
-import { rtdbHasQueue, rtdbRemoveCurrent } from "../utils/rtdbData";
+import { rtdbRemoveCurrent } from "../utils/rtdbData";
 
 const useEquipmentQueue = (post) => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -18,7 +18,7 @@ const useEquipmentQueue = (post) => {
     // const setAuthUser = useAuthStore((state) => state.setUser);
     // const setUserProfile = useUserProfileStore((state) => state.setUserProfile);
 
-    const handleEquipmentQueue = async (buttonMode) => {
+    const handleEquipmentQueue = async (buttonMode, timeUsageSetter = '3') => {
         if (isUpdating) return;
         if (!authUser) return showToast("Error", "You must be logged in", "error");
         setIsUpdating(true);
@@ -114,7 +114,7 @@ const useEquipmentQueue = (post) => {
                             status: "PENDING",
                             queueCount: 0,
                             timestamp: serverTimestamp(),
-                            timeUsage: post.timeUsage,
+                            timeUsage: +timeUsageSetter,
                         };
                     } else {
                         await updateDoc(userRef, { inQueue: arrayUnion(post.id) });
@@ -126,6 +126,7 @@ const useEquipmentQueue = (post) => {
                                 {
                                     RFID: authUser.RFIDcode,
                                     User: authUser.uid,
+                                    timeUsage: +timeUsageSetter,
                                 }
                             ],
                             // timestamp: serverTimestamp()
