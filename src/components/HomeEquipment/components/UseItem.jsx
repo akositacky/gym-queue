@@ -154,7 +154,7 @@ const UseItem = ({ equipments, handleClick, onOpenLeave }) => {
                         fontSize='sm'
                         color={queueLength <= 0 ? 'green.600' : ''}
                     >
-                        {queueLength <= 0 ? ((equipments.User != "") ? `has a pending user` : 'Available') : queueLength}
+                        {queueLength <= 0 ? ((equipments.User != "") ? `` : 'Available') : queueLength}
                     </Text>
 
                     {(queueLength > 0) && (
