@@ -8,6 +8,8 @@ import NextQueuePage from "../../pages/NextQueue/NextQueuePage";
 import EquipmentBox from "./assets/EquipmentBox";
 import { numberSuffix } from "../../utils/numberSuffix";
 import { useState } from "react";
+import Countdown from "react-countdown";
+import { convertDate } from "../../utils/convertTime";
 
 const EquipmentDetails = ({ equipments, isOffline }) => {
     const { handleEquipmentQueue } = useEquipmentQueue(equipments);
@@ -85,6 +87,14 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
         !mode && onOpen();
         handleEquipmentQueue(mode, value);
         timeUsageOnClose();
+    }
+
+    const handleQueue = () => {
+        if (mode == 'INQUEUE') {
+            handleClick();
+        } else {
+            timeUsageOnOpen();
+        }
     }
 
     return (
@@ -354,13 +364,42 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
                                 {/* <Text mb={4} fontWeight={'bold'} fontSize='sm'>
                                     Equipment Usage: {equipments.timeUsage} mins
                                 </Text> */}
+                                {equipments.status == "PENDING" && (
+                                    <>
+                                        <Text fontWeight={'bold'} fontSize='sm'>
+                                            Has a <span style={{ 'color': '#b7791f' }}>PENDING</span> user
+                                        </Text>
+                                        <Text fontWeight={'bold'} fontSize='sm'>
+                                            <Countdown
+                                                daysInHours
+                                                // onComplete={handleComplete}
+                                                date={convertDate(equipments.timestamp, 5)} />
+                                        </Text>
+                                    </>
+                                )}
+
+                                {equipments.status == "USE" && (
+                                    <>
+                                        <Text fontWeight={'bold'} fontSize='sm'>
+                                            A User is <span style={{ 'color': '#b7791f' }}>USING</span> an equipment
+                                        </Text>
+                                        <Text fontWeight={'bold'} fontSize='sm'>
+                                            Time remaining:
+                                            <Countdown
+                                                daysInHours
+                                                // onComplete={handleComplete}
+                                                // onTick={(e) => { handleOnTick(e) }}
+                                                date={convertDate(equipments.timestamp, +equipments.timeUsage)} />
+                                        </Text>
+                                    </>
+                                )}
                             </Box>
                         </Flex>
                         <Stack mt={8} direction={'row'} spacing={4}>
                             <Button
                                 flex={1}
                                 variant={queueButtonVariant}
-                                onClick={timeUsageOnOpen}
+                                onClick={handleQueue}
                                 fontSize={'sm'}
                                 rounded={'full'}
                                 isDisabled={isOffline}
@@ -378,8 +417,8 @@ const EquipmentDetails = ({ equipments, isOffline }) => {
                                 {queueText}
                             </Button>
                         </Stack>
-                    </Box>
-                </EquipmentBox>
+                    </Box >
+                </EquipmentBox >
             )}
         </>
     )
